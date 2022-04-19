@@ -53,6 +53,21 @@ public class ProductController {
 //        return "redirect:/product/all";
 //    }
 
+    @GetMapping("/cart")
+    public String cartList(Model model) {
+        model.addAttribute("cart", productService.findAllInCart());
+        return "cart-list";
+    }
 
+    @GetMapping("/add/{id}")
+    public String addToCart(@PathVariable(name = "id") Long id) {
+        productService.addToCart(id);
+        return "redirect:/product/all";
+    }
 
+    @GetMapping("/deleteCart/{id}")
+    public String deleteFromCart(@PathVariable(name = "id") Long id) {
+        productService.deleteFromCart(id);
+        return "redirect:/product/cart-list";
+    }
 }

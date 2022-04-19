@@ -2,7 +2,9 @@ package ru.gb.thymeleafprepare.service;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import ru.gb.thymeleafprepare.dao.CartDao;
 import ru.gb.thymeleafprepare.dao.ProductDao;
+import ru.gb.thymeleafprepare.entity.Cart;
 import ru.gb.thymeleafprepare.entity.Product;
 import ru.gb.thymeleafprepare.entity.enums.Status;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductService {
+
     private final ProductDao productDao;
+    private final CartDao cartDao;
 
     @Transactional(propagation = Propagation.NEVER, isolation = Isolation.DEFAULT)
     public long count() {
@@ -52,6 +56,11 @@ public class ProductService {
         return productDao.findAll();
     }
 
+    @Transactional
+    public List<Cart> findAllInCart() {
+        return cartDao.findAll();
+    }
+
     public List<Product> findAllActive() {
         return productDao.findAllByStatus(Status.ACTIVE);
     }
@@ -72,6 +81,19 @@ public class ProductService {
         });
     }
 
+    public Product addToCart(Long id) {
+        Product product = productDao.getById(id);
+        Cart cart = cartDao.getById(id);
+        cart.addProduct(product);
+        cartDao.save(cart);
+        return product;
+    }
+
+    public void deleteFromCart(Long id) {
+        Cart cart = cartDao.getById(id);
+        cart.getProducts().removeIf(product -> product.getId().equals(id));
+    }
+
     public List<Product> findAll(int page, int size) {
         return productDao.findAllByStatus(Status.ACTIVE, PageRequest.of(page, size));
     }
@@ -83,6 +105,4 @@ public class ProductService {
     public List<Product> findAllSortedById(int page, int size) {
         return productDao.findAllByStatus(Status.ACTIVE, PageRequest.of(page, size, Sort.by("id")));
     }
-
-
 }
