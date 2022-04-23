@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<div th:replace="~{navbar :: navi(CartList)}"></div>
+<div th:replace="~{navbar :: navi(Cart)}"></div>
 
 <div class="container">
     <span th:if="${cart.size() == 0}">Товаров нет</span>
@@ -21,7 +21,6 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Наименование</th>
-                <th scope="col">Цена</th>
                 <th scope="col">Удалить из корзины</th>
 
             </tr>
@@ -32,7 +31,7 @@
 
                 <th scope="row" th:text="${i.count}"></th>
                 <td th:text="${product.title}"></td>
-                <td th:text="${product.cost}"></td>
+
 
                 <td>
                     <a type="button" th:href="@{${'/product/deleteCart/' + product.id}}" class="btn btn-danger">Удалить</a>

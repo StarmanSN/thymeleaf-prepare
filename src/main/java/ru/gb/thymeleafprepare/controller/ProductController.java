@@ -1,6 +1,7 @@
-package ru.gb.thymeleafprepare;
+package ru.gb.thymeleafprepare.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.gb.thymeleafprepare.entity.Cart;
 import ru.gb.thymeleafprepare.entity.Product;
 import ru.gb.thymeleafprepare.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -53,14 +54,15 @@ public class ProductController {
 //        return "redirect:/product/all";
 //    }
 
-    @GetMapping("/cart")
+    //    @GetMapping("/cart-list")
+    @RequestMapping(value = "//cart-list", method = RequestMethod.POST)
     public String cartList(Model model) {
         model.addAttribute("cart", productService.findAllInCart());
         return "cart-list";
     }
 
-    @GetMapping("/add/{id}")
-    public String addToCart(@PathVariable(name = "id") Long id) {
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String addToCart(@RequestParam(name = "id") Long id) {
         productService.addToCart(id);
         return "redirect:/product/all";
     }

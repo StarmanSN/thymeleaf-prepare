@@ -5,5 +5,5 @@ import ru.gb.thymeleafprepare.entity.Cart;
 
 public interface CartDao extends JpaRepository<Cart, Long> {
 
-    Cart save(Cart cart);
+//    Cart save(Cart cart);
 }
