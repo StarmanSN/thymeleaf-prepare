@@ -26,14 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 (requests) -> {
                     requests.antMatchers("/product/all").permitAll();
                     requests.antMatchers("/").permitAll();
-                    requests.antMatchers(HttpMethod.GET, "/product").hasRole("ADMIN");
+                    requests.antMatchers(HttpMethod.GET, "/product").hasAuthority("ADMIN");
                     requests.mvcMatchers(HttpMethod.GET, "/product/{productId}").permitAll();
-                    requests.antMatchers(HttpMethod.GET, "/product/cart-list").hasRole("ADMIN");
-                    requests.antMatchers(HttpMethod.POST, "/product").hasRole("ADMIN");
-                    requests.antMatchers(HttpMethod.DELETE, "/product").hasRole("ADMIN");
+                    requests.antMatchers(HttpMethod.POST, "/product").hasAuthority("ADMIN");
                 }
         );
-
         http.authorizeRequests((requests) -> {
             ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl) requests.anyRequest()).authenticated();
         });

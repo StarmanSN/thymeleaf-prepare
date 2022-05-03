@@ -43,7 +43,8 @@
                 </td>
                 <td>
                     <a type="button" sec:authorize="hasAuthority('ADMIN')" th:href="@{${'/product/delete/' + product.id}}" class="btn btn-danger">Удалить</a>
-                    <a type="button" sec:authorize="hasAuthority('USER') || isAnonymous()" th:href="@{${'/product/cart/add/' + product.id}}" class="btn btn-success">Добавить в корзину</a>
+                    <a type="button" sec:authorize="hasAuthority('USER')" th:href="@{${'/product/cart/add/' + product.id}}" class="btn btn-success">Добавить в корзину</a>
+                    <a type="button" sec:authorize="isAnonymous()" th:href="@{/product/message}" class="btn btn-success">Добавить в корзину</a>
                 </td>
             </tr>
             </tbody>

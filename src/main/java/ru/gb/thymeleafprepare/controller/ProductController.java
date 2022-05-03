@@ -1,12 +1,11 @@
 package ru.gb.thymeleafprepare.controller;
 
-import org.springframework.web.bind.annotation.*;
-import ru.gb.thymeleafprepare.entity.Cart;
-import ru.gb.thymeleafprepare.entity.Product;
-import ru.gb.thymeleafprepare.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import ru.gb.thymeleafprepare.entity.Product;
+import ru.gb.thymeleafprepare.service.ProductService;
 
 import java.time.LocalDate;
 
@@ -60,27 +59,26 @@ public class ProductController {
         return "redirect:/product/all";
     }
 
-//    @GetMapping("/delete")
-//    public String deleteById(@RequestParam(name = "id") Long id) {
-//        productService.deleteById(id);
-//        return "redirect:/product/all";
-//    }
-
     @GetMapping("/cart-list")
     public String cartList(Model model) {
         model.addAttribute("cart", productService.findProductsInCart());
         return "cart-list";
     }
 
-    @RequestMapping(value = "/cart/add/{productId}")
-    public String addToCart(@PathVariable(name = "productId") Long id) {
+    @GetMapping("/cart/add/{id}")
+    public String addToCart(@PathVariable(name = "id") Long id) {
         productService.addToCart(id);
         return "redirect:/product/all";
     }
 
-    @GetMapping("/deleteCart/{productId}")
-    public String deleteFromCart(@PathVariable(name = "productId") Long id) {
+    @GetMapping("/deleteCart/{id}")
+    public String deleteFromCart(@PathVariable(name = "id") Long id) {
         productService.deleteFromCart(id);
         return "redirect:/product/cart-list";
+    }
+
+    @GetMapping("/message")
+    public String needToAuth() {
+        return "message";
     }
 }
