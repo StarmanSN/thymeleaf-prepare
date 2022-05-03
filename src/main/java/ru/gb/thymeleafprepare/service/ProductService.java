@@ -17,6 +17,7 @@ import ru.gb.thymeleafprepare.entity.enums.Status;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -56,8 +57,9 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    public List<Cart> findAllInCart() {
-        return cartDao.findAll();
+    @Transactional
+    public List<Product> findProductsInCart() {
+        return cartDao.getById(1L).getProducts();
     }
 
     public List<Product> findAllActive() {
@@ -81,7 +83,7 @@ public class ProductService {
     }
 
     public Product addToCart(Long id) {
-        Cart cart = cartDao.getById(id);
+        Cart cart = cartDao.getById(1L);
         Product product = productDao.getById(id);
         cart.addProduct(product);
         cartDao.save(cart);
@@ -89,8 +91,14 @@ public class ProductService {
     }
 
     public void deleteFromCart(Long id) {
-        Cart cart = cartDao.getById(id);
-        cart.getProducts().removeIf(product -> product.getId().equals(id));
+        Cart cart = cartDao.getById(1L);
+        List<Product> products = cart.getProducts();
+        for (int i = 0; i < products.size(); i++) {
+            if (products != null) {
+                Optional<Product> product = productDao.findById(id);
+                products.remove(product);
+            }
+        }
     }
 
     public List<Product> findAll(int page, int size) {

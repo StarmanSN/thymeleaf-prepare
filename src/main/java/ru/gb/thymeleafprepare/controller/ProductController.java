@@ -35,6 +35,18 @@ public class ProductController {
         return "product-form";
     }
 
+    @GetMapping("/{productId}")
+    public String showInfo(Model model, @PathVariable(name = "productId") Long id) {
+        Product product;
+        if (id != null) {
+            product = productService.findById(id);
+        } else {
+            return "redirect:/product/all";
+        }
+        model.addAttribute("product", product);
+        return "product-info";
+    }
+
     @PostMapping
     public String saveProduct(Product product) {
         product.setManufactureDate(LocalDate.now());
@@ -54,21 +66,20 @@ public class ProductController {
 //        return "redirect:/product/all";
 //    }
 
-    //    @GetMapping("/cart-list")
-    @RequestMapping(value = "//cart-list", method = RequestMethod.POST)
+    @GetMapping("/cart-list")
     public String cartList(Model model) {
-        model.addAttribute("cart", productService.findAllInCart());
+        model.addAttribute("cart", productService.findProductsInCart());
         return "cart-list";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addToCart(@RequestParam(name = "id") Long id) {
+    @RequestMapping(value = "/cart/add/{productId}")
+    public String addToCart(@PathVariable(name = "productId") Long id) {
         productService.addToCart(id);
         return "redirect:/product/all";
     }
 
-    @GetMapping("/deleteCart/{id}")
-    public String deleteFromCart(@PathVariable(name = "id") Long id) {
+    @GetMapping("/deleteCart/{productId}")
+    public String deleteFromCart(@PathVariable(name = "productId") Long id) {
         productService.deleteFromCart(id);
         return "redirect:/product/cart-list";
     }

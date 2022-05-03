@@ -4,8 +4,7 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -30,11 +29,11 @@ public class Cart {
     @JoinTable(name = "cart_product",
             joinColumns = @JoinColumn(name = "cart_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private Set<Product> products = new HashSet<>();
+    private List<Product> products = new LinkedList<>();
 
     public boolean addProduct(Product product) {
         if (products == null) {
-            products = new HashSet<>();
+            products = new LinkedList<>();
         }
         return products.add(product);
     }
