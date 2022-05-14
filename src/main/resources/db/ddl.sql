@@ -25,7 +25,7 @@ CREATE TABLE PRODUCT
     LAST_MODIFIED_BY   VARCHAR(255),
     LAST_MODIFIED_DATE TIMESTAMP,
     STATUS             VARCHAR(20)    NOT NULL DEFAULT 'ACTIVE',
-        UNIQUE (TITLE)
+    UNIQUE (TITLE)
 );
 
 CREATE TABLE CART
@@ -66,3 +66,58 @@ ALTER TABLE PRODUCT
 
 SELECT *
 FROM PRODUCT;-- WHERE ID=106;
+
+CREATE TABLE ACCOUNT_USER
+(
+    ID                      BIGSERIAL    NOT NULL PRIMARY KEY,
+    USERNAME                VARCHAR(255) NOT NULL,
+    PASSWORD                VARCHAR(255) NOT NULL,
+    FIRSTNAME               VARCHAR(255) NOT NULL,
+    LASTNAME                VARCHAR(255) NOT NULL,
+    account_non_expired     boolean      NOT NULL,
+    account_non_locked      boolean      NOT NULL,
+    credentials_non_expired boolean      NOT NULL,
+    enabled                 boolean      NOT NULL,
+
+    UNIQUE (USERNAME)
+);
+
+CREATE TABLE AUTHORITY
+(
+    ID   BIGSERIAL    NOT NULL PRIMARY KEY,
+    ROLE VARCHAR(255) NOT NULL,
+
+    UNIQUE (ROLE)
+);
+
+CREATE TABLE USER_AUTHORITY
+(
+    USER_ID      BIGINT NOT NULL,
+    AUTHORITY_ID BIGINT NOT NULL,
+
+    PRIMARY KEY (USER_ID, AUTHORITY_ID),
+
+    CONSTRAINT fk_user_authority_account_user
+        FOREIGN KEY (USER_ID)
+            REFERENCES ACCOUNT_USER (ID),
+
+
+    CONSTRAINT fk_user_authority_authority
+        FOREIGN KEY (AUTHORITY_ID)
+            REFERENCES AUTHORITY (ID)
+);
+
+insert into ACCOUNT_USER (USERNAME, PASSWORD, FIRSTNAME, LASTNAME, account_non_expired, account_non_locked,
+                          credentials_non_expired, enabled)
+values ('user', '$2a$10$tRPiN1GMOsjVwoeOB3hli.jbwmkaorBXTmgiIzvOvP4MSiUuSUni2', 'Иван', 'Иванов', true, true, true,
+        true),
+       ('admin', '$2a$10$RZN5yXj8TO2/z5osR9xM7OpexZmUUHYHtFH7whFwo58sasnIGBf6e', 'Игорь', 'Логачев', true, true, true,
+        true);
+
+insert into AUTHORITY (ROLE)
+values ('USER'),
+       ('ADMIN');
+
+insert into USER_AUTHORITY(USER_ID, AUTHORITY_ID)
+values (1, 1),
+       (2, 2);
