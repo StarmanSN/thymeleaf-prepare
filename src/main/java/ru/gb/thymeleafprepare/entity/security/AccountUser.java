@@ -1,10 +1,13 @@
 package ru.gb.thymeleafprepare.entity.security;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -27,9 +30,24 @@ public class AccountUser implements UserDetails {
 
     @Singular
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authority", joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
+    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")})
+    private Set<AccountRole> roles;
+
+    @Transient
     private Set<Authority> authorities;
+
+    @Override
+    public Set<GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = roles.stream()
+                .map(AccountRole::getAuthorities)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+        authorities.addAll(roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList()));
+        return authorities;
+    }
 
     @Builder.Default
     private boolean accountNonExpired = true;

@@ -22,9 +22,9 @@
                 <th scope="col">#</th>
                 <th scope="col">Наименование</th>
                 <th scope="col">Цена</th>
-                <th scope="col" sec:authorize="hasAuthority('ADMIN')">Редактировать</th>
-                <th scope="col" sec:authorize="hasAuthority('ADMIN')">Удалить</th>
-                <th scope="col" sec:authorize="hasAuthority('USER') || isAnonymous()">Просмотреть</th>
+                <th scope="col" sec:authorize="hasAuthority('product.update')">Редактировать</th>
+                <th scope="col" sec:authorize="hasAuthority('product.delete')">Удалить</th>
+                <th scope="col" sec:authorize="hasAuthority('product.read') || isAnonymous()">Просмотреть</th>
 
             </tr>
             </thead>
@@ -37,14 +37,25 @@
                 <td th:text="${product.title}"></td>
                 <td th:text="${product.cost}"></td>
 
-                <td>
-                    <a type="button" sec:authorize="hasAuthority('ADMIN')" th:href="@{/product(id=${product.id})}" class="btn btn-warning">Редактировать</a>
-                    <a type="button" sec:authorize="hasAuthority('USER') || isAnonymous()" th:href="@{'/product/' + ${product.id}}" class="btn btn-warning">Просмотреть</a>
+                <td sec:authorize="hasAuthority('product.update')">
+                    <a type="button"
+                       th:href="@{/product(id=${product.id})}" class="btn btn-warning">Редактировать</a>
                 </td>
-                <td>
-                    <a type="button" sec:authorize="hasAuthority('ADMIN')" th:href="@{${'/product/delete/' + product.id}}" class="btn btn-danger">Удалить</a>
-                    <a type="button" sec:authorize="hasAuthority('USER')" th:href="@{${'/product/cart/add/' + product.id}}" class="btn btn-success">Добавить в корзину</a>
-                    <a type="button" sec:authorize="isAnonymous()" th:href="@{/product/message}" class="btn btn-success">Добавить в корзину</a>
+                <td sec:authorize="hasAuthority('product.read') || isAnonymous()">
+                    <a type="button"
+                       th:href="@{'/product/' + ${product.id}}" class="btn btn-warning">Просмотреть</a>
+                </td>
+                <td sec:authorize="hasAuthority('product.delete')">
+                    <a type="button"
+                       th:href="@{${'/product/delete/' + product.id}}" class="btn btn-danger">Удалить</a>
+                </td>
+                <td sec:authorize="hasAuthority('product.read')">
+                    <a type="button"
+                       th:href="@{${'/product/cart/add/' + product.id}}" class="btn btn-success">Добавить в корзину</a>
+                </td>
+                <td sec:authorize="isAnonymous()" th:href="@{/product/message}">
+                    <a type="button"
+                       class="btn btn-success">Добавить в корзину</a>
                 </td>
             </tr>
             </tbody>
