@@ -1,6 +1,7 @@
 package ru.gb.thymeleafprepare.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('product.create', 'product.update')")
     public String showForm(Model model, @RequestParam(name = "id", required = false) Long id) {
         Product product;
         if (id != null) {
@@ -35,6 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
+    @PreAuthorize("hasAnyAuthority('product.read')")
     public String showInfo(Model model, @PathVariable(name = "productId") Long id) {
         Product product;
         if (id != null) {
@@ -47,6 +50,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('product.create', 'product.update')")
     public String saveProduct(Product product) {
         product.setManufactureDate(LocalDate.now());
         productService.save(product);
@@ -54,6 +58,7 @@ public class ProductController {
     }
 
     @GetMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('product.delete')")
     public String deleteById(@PathVariable(name = "id") Long id) {
         productService.deleteById(id);
         return "redirect:/product/all";

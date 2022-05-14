@@ -84,23 +84,47 @@ CREATE TABLE ACCOUNT_USER
 
 CREATE TABLE AUTHORITY
 (
-    ID   BIGSERIAL    NOT NULL PRIMARY KEY,
-    ROLE VARCHAR(255) NOT NULL,
+    ID         BIGSERIAL    NOT NULL PRIMARY KEY,
+    permission VARCHAR(255) NOT NULL,
 
-    UNIQUE (ROLE)
+    UNIQUE (permission)
 );
 
-CREATE TABLE USER_AUTHORITY
+create table account_role
 (
-    USER_ID      BIGINT NOT NULL,
-    AUTHORITY_ID BIGINT NOT NULL,
+    ID   BIGSERIAL    NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
 
-    PRIMARY KEY (USER_ID, AUTHORITY_ID),
+    UNIQUE (name)
+);
+
+CREATE TABLE USER_ROLE
+(
+    USER_ID BIGINT NOT NULL,
+    ROLE_ID BIGINT NOT NULL,
+
+    PRIMARY KEY (USER_ID, ROLE_ID),
 
     CONSTRAINT fk_user_authority_account_user
         FOREIGN KEY (USER_ID)
             REFERENCES ACCOUNT_USER (ID),
 
+    CONSTRAINT fk_user_role
+        FOREIGN KEY (ROLE_ID)
+            REFERENCES account_role (ID)
+);
+
+
+CREATE TABLE ROLE_AUTHORITY
+(
+    ROLE_ID      BIGINT NOT NULL,
+    AUTHORITY_ID BIGINT NOT NULL,
+
+    PRIMARY KEY (ROLE_ID, AUTHORITY_ID),
+
+    CONSTRAINT fk_user_authority_account_role
+        FOREIGN KEY (ROLE_ID)
+            REFERENCES ACCOUNT_ROLE (ID),
 
     CONSTRAINT fk_user_authority_authority
         FOREIGN KEY (AUTHORITY_ID)
@@ -114,10 +138,23 @@ values ('user', '$2a$10$tRPiN1GMOsjVwoeOB3hli.jbwmkaorBXTmgiIzvOvP4MSiUuSUni2', 
        ('admin', '$2a$10$RZN5yXj8TO2/z5osR9xM7OpexZmUUHYHtFH7whFwo58sasnIGBf6e', 'Игорь', 'Логачев', true, true, true,
         true);
 
-insert into AUTHORITY (ROLE)
-values ('USER'),
-       ('ADMIN');
+insert into AUTHORITY (permission)
+values ('product.create'),
+       ('product.read'),
+       ('product.update'),
+       ('product.delete');
 
-insert into USER_AUTHORITY(USER_ID, AUTHORITY_ID)
+insert into account_role (name)
+values ('ROLE_ADMIN'),
+       ('ROLE_USER');
+
+insert into USER_ROLE(USER_ID, ROLE_ID)
+values (1, 2),
+       (2, 1);
+
+insert into ROLE_AUTHORITY (role_id, authority_id)
 values (1, 1),
+       (1, 2),
+       (1, 3),
+       (1, 4),
        (2, 2);
