@@ -65,18 +65,21 @@ public class ProductController {
     }
 
     @GetMapping("/cart-list")
+    @PreAuthorize("hasAnyAuthority('product.add')")
     public String cartList(Model model) {
         model.addAttribute("cart", productService.findProductsInCart());
         return "cart-list";
     }
 
     @GetMapping("/cart/add/{id}")
+    @PreAuthorize("hasAnyAuthority('product.add')")
     public String addToCart(@PathVariable(name = "id") Long id) {
         productService.addToCart(id);
         return "redirect:/product/all";
     }
 
     @GetMapping("/deleteCart/{id}")
+    @PreAuthorize("hasAnyAuthority('product.add')")
     public String deleteFromCart(@PathVariable(name = "id") Long id) {
         productService.deleteFromCart(id);
         return "redirect:/product/cart-list";

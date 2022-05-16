@@ -28,7 +28,7 @@
                     <a class="nav-link" th:classappend="${activeTab == 'ProductForm' ? 'active' : ''}"
                        th:href="@{/product}">Добавить продукт</a>
                 </li>
-                <li sec:authorize="hasAuthority('product.read')" class="nav-item">
+                <li sec:authorize="hasAuthority('product.add')" class="nav-item">
                     <a class="nav-link" th:classappend="${activeTab == 'Cart' ? 'active' : ''}"
                        th:href="@{/product/cart-list}">Корзина</a>
                 </li>

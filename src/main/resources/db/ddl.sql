@@ -144,6 +144,9 @@ values ('product.create'),
        ('product.update'),
        ('product.delete');
 
+insert into authority (permission)
+values ('product.add');
+
 insert into account_role (name)
 values ('ROLE_ADMIN'),
        ('ROLE_USER');
@@ -158,3 +161,7 @@ values (1, 1),
        (1, 3),
        (1, 4),
        (2, 2);
+
+insert into ROLE_AUTHORITY (role_id, authority_id)
+values (2, 5);
+
