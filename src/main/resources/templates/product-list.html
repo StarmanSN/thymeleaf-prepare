@@ -24,7 +24,7 @@
                 <th scope="col">Цена</th>
                 <th scope="col" sec:authorize="hasAuthority('product.update')">Редактировать</th>
                 <th scope="col" sec:authorize="hasAuthority('product.delete')">Удалить</th>
-                <th scope="col" sec:authorize="hasAuthority('product.read') || isAnonymous()">Просмотреть</th>
+                <th scope="col" sec:authorize="hasAuthority('product.add') || isAnonymous()">Просмотреть</th>
 
             </tr>
             </thead>
@@ -41,7 +41,7 @@
                     <a type="button"
                        th:href="@{/product(id=${product.id})}" class="btn btn-warning">Редактировать</a>
                 </td>
-                <td sec:authorize="hasAuthority('product.read') || isAnonymous()">
+                <td sec:authorize="hasAuthority('product.add') || isAnonymous()">
                     <a type="button"
                        th:href="@{'/product/' + ${product.id}}" class="btn btn-warning">Просмотреть</a>
                 </td>
@@ -49,7 +49,7 @@
                     <a type="button"
                        th:href="@{${'/product/delete/' + product.id}}" class="btn btn-danger">Удалить</a>
                 </td>
-                <td sec:authorize="hasAuthority('product.read')">
+                <td sec:authorize="hasAuthority('product.add')">
                     <a type="button"
                        th:href="@{${'/product/cart/add/' + product.id}}" class="btn btn-success">Добавить в корзину</a>
                 </td>

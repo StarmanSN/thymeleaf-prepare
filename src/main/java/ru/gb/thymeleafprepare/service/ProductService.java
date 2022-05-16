@@ -57,9 +57,9 @@ public class ProductService {
         return productDao.findAll();
     }
 
-    @Transactional
-    public List<Product> findProductsInCart() {
-        return cartDao.getById(1L).getProducts();
+    public Set<Product> findProductsInCart() {
+        Optional<Cart> cart = cartDao.findById(1L);
+        return cart.get().getProducts();
     }
 
     public List<Product> findAllActive() {
@@ -92,13 +92,8 @@ public class ProductService {
 
     public void deleteFromCart(Long id) {
         Cart cart = cartDao.getById(1L);
-        List<Product> products = cart.getProducts();
-        for (int i = 0; i < products.size(); i++) {
-            if (products != null) {
-                Optional<Product> product = productDao.findById(id);
-                products.remove(product);
-            }
-        }
+        Set<Product> products = cart.getProducts();
+        products.removeIf(prod -> prod.getId().equals(id));
     }
 
     public List<Product> findAll(int page, int size) {

@@ -29,12 +29,14 @@ public class Cart {
     @JoinTable(name = "cart_product",
             joinColumns = @JoinColumn(name = "cart_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> products = new LinkedList<>();
+    private Set<Product> products = new HashSet<>();
 
     public boolean addProduct(Product product) {
         if (products == null) {
-            products = new LinkedList<>();
+            products = new HashSet<>();
         }
         return products.add(product);
     }
+
+
 }
